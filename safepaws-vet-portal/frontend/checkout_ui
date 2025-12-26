@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SafePaws Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        /* THEME CONFIGURATION */
+        body {
+            background-color: #071331;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl;
+        }
+        .glass-card {
+            @apply bg-[#0b1d45]/80 backdrop-blur-md border border-white/5 rounded-xl transition-all duration-300 hover:border-[#0ea5e9]/50 hover:shadow-lg hover:shadow-[#0ea5e9]/10 hover:-translate-y-1;
+        }
+        .glass-input {
+            @apply w-full bg-[#050f26] border border-white/10 text-white placeholder-gray-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9] focus:border-transparent transition-all;
+        }
+        .glass-btn {
+            @apply bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-medium rounded-lg px-4 py-2 transition-all shadow-lg shadow-blue-500/20 active:scale-95;
+        }
+
+        /* Animations */
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-enter { animation: fade-in 0.4s ease-out forwards; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #071331; }
+        ::-webkit-scrollbar-thumb { background: #1e3a8a; rounded: 3px; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-50 glass-panel !rounded-none border-b border-white/10 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="switchView('shop')">
+                <div class="w-8 h-8 rounded-lg bg-[#0ea5e9] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                </div>
+                <span class="text-xl font-bold tracking-tight">SafePaws<span class="text-[#0ea5e9]">.store</span></span>
+            </div>
+
+            <button onclick="switchView('checkout')" class="relative p-2 hover:bg-white/10 rounded-full transition group">
+                <svg class="w-6 h-6 text-gray-300 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                <span id="cart-badge" class="absolute top-0 right-0 bg-[#0ea5e9] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl mx-auto w-full p-4 md:p-8">
+
+        <div id="shop-view" class="animate-enter">
+            <div class="mb-10 relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0ea5e9]/20 to-purple-600/20 border border-white/10 p-8 md:p-12 flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl md:text-5xl font-bold mb-4">Premium Care <br>for Your Pets</h1>
+                    <p class="text-gray-300 max-w-lg mb-6">Verified nutrition, toys, and medical supplies delivered directly to your door.</p>
+                    <button class="glass-btn px-6 py-3">View Best Sellers</button>
+                </div>
+                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/dog-food-bag-5253597-4399757.png" class="hidden md:block w-64 opacity-90 drop-shadow-2xl" alt="Dog Food">
+            </div>
+
+            <div class="flex gap-4 overflow-x-auto pb-4 mb-6 no-scrollbar">
+                <button class="px-4 py-2 rounded-full bg-[#0ea5e9] text-white text-sm font-medium whitespace-nowrap">All Items</button>
+                <button class="px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 text-sm font-medium whitespace-nowrap transition">Food & Treats</button>
+                <button class="px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 text-sm font-medium whitespace-nowrap transition">Toys</button>
+                <button class="px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 text-sm font-medium whitespace-nowrap transition">Healthcare</button>
+            </div>
+
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                </div>
+        </div>
+
+        <div id="checkout-view" class="hidden animate-enter">
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <button onclick="switchView('shop')" class="text-gray-400 hover:text-white transition"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg></button>
+                Checkout
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass-panel p-6">
+                        <h3 class="text-lg font-semibold mb-4 border-b border-white/10 pb-2">Shipping Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs text-gray-400 uppercase mb-1 block">Full Name</label>
+                                <input type="text" class="glass-input" placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 uppercase mb-1 block">Phone</label>
+                                <input type="tel" class="glass-input" placeholder="+1 234 567 890">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="text-xs text-gray-400 uppercase mb-1 block">Address</label>
+                                <input type="text" class="glass-input" placeholder="123 Pet Street, Apartment 4B">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 uppercase mb-1 block">City</label>
+                                <input type="text" class="glass-input" placeholder="New York">
+                            </div>
+                            <div>
+                                <label class="text-xs text-gray-400 uppercase mb-1 block">Postal Code</label>
+                                <input type="text" class="glass-input" placeholder="10001">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel p-6">
+                        <h3 class="text-lg font-semibold mb-4 border-b border-white/10 pb-2">Payment Method</h3>
+                        <div class="flex gap-4">
+                            <div class="flex-1 border border-[#0ea5e9] bg-[#0ea5e9]/10 rounded-lg p-4 flex items-center gap-3 cursor-pointer">
+                                <div class="w-4 h-4 rounded-full border-2 border-[#0ea5e9] bg-[#0ea5e9]"></div>
+                                <span class="font-medium">Credit Card</span>
+                            </div>
+                            <div class="flex-1 border border-white/10 bg-white/5 hover:bg-white/10 rounded-lg p-4 flex items-center gap-3 cursor-pointer">
+                                <div class="w-4 h-4 rounded-full border-2 border-gray-500"></div>
+                                <span class="font-medium text-gray-300">PayPal</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <input type="text" class="glass-input" placeholder="Card Number">
+                            <div class="flex gap-4">
+                                <input type="text" class="glass-input" placeholder="MM/YY">
+                                <input type="text" class="glass-input" placeholder="CVC">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1">
+                    <div class="glass-panel p-6 sticky top-24">
+                        <h3 class="text-lg font-semibold mb-4">Order Summary</h3>
+                        
+                        <div id="cart-items-container" class="space-y-4 mb-6 max-h-60 overflow-y-auto pr-2">
+                            <div class="text-center text-gray-500 py-4">Your cart is empty</div>
+                        </div>
+
+                        <div class="border-t border-white/10 pt-4 space-y-2 text-sm text-gray-300">
+                            <div class="flex justify-between">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal">$0.00</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Shipping</span>
+                                <span>$5.00</span>
+                            </div>
+                            <div class="flex justify-between text-white text-lg font-bold pt-2 border-t border-white/10 mt-2">
+                                <span>Total</span>
+                                <span id="summary-total">$5.00</span>
+                            </div>
+                        </div>
+
+                        <button onclick="placeOrder()" class="w-full mt-6 glass-btn py-3 text-lg shadow-xl shadow-blue-500/20">
+                            Place Order
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <div id="product-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl bg-[#0b1d45] border border-white/10 rounded-2xl shadow-2xl p-6 md:p-8 flex flex-col md:flex-row gap-8 animate-enter">
+            <div class="w-full md:w-1/2">
+                <img id="modal-img" src="" class="w-full h-64 object-cover rounded-xl bg-white/5" alt="Product">
+            </div>
+            <div class="w-full md:w-1/2 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start">
+                        <h2 id="modal-title" class="text-2xl font-bold mb-2">Product Name</h2>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-white">&times;</button>
+                    </div>
+                    <p id="modal-price" class="text-xl text-[#0ea5e9] font-medium mb-4">$0.00</p>
+                    <p id="modal-desc" class="text-gray-300 text-sm leading-relaxed mb-6">Description goes here.</p>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center bg-white/5 rounded-lg border border-white/10">
+                        <button class="px-3 py-1 text-gray-400 hover:text-white" onclick="adjustModalQty(-1)">-</button>
+                        <span id="modal-qty" class="px-2 font-medium">1</span>
+                        <button class="px-3 py-1 text-gray-400 hover:text-white" onclick="adjustModalQty(1)">+</button>
+                    </div>
+                    <button id="modal-add-btn" class="flex-1 glass-btn">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const products = [
+            { id: 1, name: "Premium Dog Food", price: 45.99, image: "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?auto=format&fit=crop&w=300&q=80", desc: "High-protein, grain-free formula for active dogs." },
+            { id: 2, name: "Orthopedic Bed", price: 89.50, image: "https://images.unsplash.com/photo-1591946614720-90a587da4a36?auto=format&fit=crop&w=300&q=80", desc: "Memory foam bed supporting joint health for large breeds." },
+            { id: 3, name: "Cat Scratch Tower", price: 120.00, image: "https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&w=300&q=80", desc: "Multi-level tower with sisal scratching posts." },
+            { id: 4, name: "Interactive Ball", price: 15.99, image: "https://images.unsplash.com/photo-1535930749574-1399327ce78f?auto=format&fit=crop&w=300&q=80", desc: "Smart rolling ball keeps your pet engaged for hours." },
+        ];
+
+        let cart = [];
+        let modalCurrentId = null;
+        let modalQtyVal = 1;
+
+        // --- INIT ---
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = products.map(p => `
+                <div class="glass-card flex flex-col p-4 group">
+                    <div class="relative mb-4 overflow-hidden rounded-xl h-48 bg-white/5 cursor-pointer" onclick="openModal(${p.id})">
+                        <img src="${p.image}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" alt="${p.name}">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                            <span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-sm font-medium">Quick View</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-lg leading-tight mb-1">${p.name}</h3>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-[#0ea5e9] font-bold">$${p.price.toFixed(2)}</span>
+                            <button onclick="addToCart(${p.id}, 1)" class="w-8 h-8 rounded-lg bg-white/10 hover:bg-[#0ea5e9] flex items-center justify-center transition text-white">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- MODAL LOGIC ---
+        function openModal(id) {
+            const p = products.find(x => x.id === id);
+            if(!p) return;
+            
+            modalCurrentId = id;
+            modalQtyVal = 1;
+            
+            document.getElementById('modal-img').src = p.image;
+            document.getElementById('modal-title').innerText = p.name;
+            document.getElementById('modal-price').innerText = `$${p.price.toFixed(2)}`;
+            document.getElementById('modal-desc').innerText = p.desc;
+            document.getElementById('modal-qty').innerText = "1";
+            document.getElementById('modal-add-btn').onclick = () => {
+                addToCart(modalCurrentId, modalQtyVal);
+                closeModal();
+            };
+            
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function adjustModalQty(change) {
+            modalQtyVal += change;
+            if(modalQtyVal < 1) modalQtyVal = 1;
+            document.getElementById('modal-qty').innerText = modalQtyVal;
+        }
+
+        // --- CART LOGIC ---
+        function addToCart(id, qty) {
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                const p = products.find(x => x.id === id);
+                cart.push({ ...p, qty: qty });
+            }
+            updateCartUI();
+            
+            // Visual feedback
+            const badge = document.getElementById('cart-badge');
+            badge.classList.add('animate-ping');
+            setTimeout(() => badge.classList.remove('animate-ping'), 500);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartUI();
+        }
+
+        function updateCartQty(id, change) {
+            const item = cart.find(x => x.id === id);
+            if(item) {
+                item.qty += change;
+                if(item.qty <= 0) removeFromCart(id);
+                else updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const badge = document.getElementById('cart-badge');
+            const subtotalEl = document.getElementById('summary-subtotal');
+            const totalEl = document.getElementById('summary-total');
+
+            // Badge
+            const totalCount = cart.reduce((acc, item) => acc + item.qty, 0);
+            badge.innerText = totalCount;
+            badge.classList.toggle('hidden', totalCount === 0);
+
+            // List
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="text-center text-gray-500 py-4 italic">Your cart is empty.</div>`;
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="flex items-center gap-4 bg-white/5 p-3 rounded-lg border border-white/5">
+                        <img src="${item.image}" class="w-12 h-12 rounded object-cover">
+                        <div class="flex-1">
+                            <h4 class="text-sm font-medium truncate">${item.name}</h4>
+                            <p class="text-xs text-[#0ea5e9]">$${item.price.toFixed(2)}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateCartQty(${item.id}, -1)" class="w-6 h-6 rounded bg-white/10 hover:bg-white/20 flex items-center justify-center text-xs">-</button>
+                            <span class="text-sm w-4 text-center">${item.qty}</span>
+                            <button onclick="updateCartQty(${item.id}, 1)" class="w-6 h-6 rounded bg-white/10 hover:bg-white/20 flex items-center justify-center text-xs">+</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Totals
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const shipping = subtotal > 0 ? 5.00 : 0;
+            subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
+            totalEl.innerText = `$${(subtotal + shipping).toFixed(2)}`;
+        }
+
+        // --- VIEW SWITCHING ---
+        function switchView(viewName) {
+            const shop = document.getElementById('shop-view');
+            const checkout = document.getElementById('checkout-view');
+            
+            if (viewName === 'shop') {
+                shop.classList.remove('hidden');
+                checkout.classList.add('hidden');
+                window.scrollTo(0,0);
+            } else {
+                shop.classList.add('hidden');
+                checkout.classList.remove('hidden');
+                updateCartUI(); // Ensure cart is fresh
+            }
+        }
+
+        function placeOrder() {
+            if(cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            const btn = document.querySelector('button[onclick="placeOrder()"]');
+            btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white inline mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Processing...`;
+            
+            setTimeout(() => {
+                alert("Order Placed Successfully! (Demo)");
+                cart = [];
+                updateCartUI();
+                switchView('shop');
+                btn.innerText = "Place Order";
+            }, 2000);
+        }
+
+        // Initialize
+        renderProducts();
+    </script>
+</body>
+</html>

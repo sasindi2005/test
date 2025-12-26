@@ -4,36 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Appointment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'patient_id',
-        'user_id',
+        'pet_id',
         'branch_id',
-        'time',
+        'appointment_at',
         'status',
         'notes',
     ];
 
     protected $casts = [
-        'time' => 'datetime',
+        'appointment_at' => 'datetime',
     ];
 
-    public function patient(): BelongsTo
+    public function pet()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Pet::class);
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function branch(): BelongsTo
+    public function branch()
     {
         return $this->belongsTo(Branch::class);
     }

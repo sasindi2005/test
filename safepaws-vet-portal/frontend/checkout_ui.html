@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SafePaws.lk | Sri Lanka's Premium Pet Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',
+                            light: '#1e293b',
+                            accent: '#38bdf8',
+                            glow: '#0ea5e9'
+                        }
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass {
+                @apply bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-xl;
+            }
+            .glass-card {
+                @apply bg-slate-800/40 backdrop-blur-md border border-white/5 transition-all duration-300 hover:bg-slate-800/60 hover:border-sky-500/30 hover:shadow-lg hover:shadow-sky-500/10 hover:-translate-y-1;
+            }
+            .input-field {
+                @apply w-full bg-slate-950/50 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all;
+            }
+            .btn-primary {
+                @apply bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold rounded-lg px-6 py-2.5 transition-all hover:shadow-[0_0_20px_rgba(14,165,233,0.3)] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+            }
+            .nav-link {
+                @apply text-slate-400 hover:text-white font-medium transition-colors duration-200 text-sm tracking-wide;
+            }
+            /* Custom Scrollbar */
+            ::-webkit-scrollbar { width: 6px; }
+            ::-webkit-scrollbar-track { background: #0f172a; }
+            ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+            ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        }
+        
+        body { background-color: #020617; color: #f8fafc; }
+        
+        /* Background Glow Effects */
+        .glow-blob {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-x-hidden font-sans">
+
+    <div class="glow-blob top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="glow-blob bottom-0 right-0 translate-x-1/3 translate-y-1/3 bg-purple-500/10"></div>
+
+    <header class="sticky top-0 z-40 glass border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="app.router('shop')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight text-white">SafePaws<span class="text-sky-500">.lk</span></h1>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Sri Lanka</p>
+                    </div>
+                </div>
+
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="#" onclick="app.router('shop')" class="nav-link text-white">Home</a>
+                    <a href="#" onclick="app.router('shop')" class="nav-link">Shop</a>
+                    <a href="#" class="nav-link">Brands</a>
+                    <a href="#" class="nav-link">About Us</a>
+                    <a href="#" class="nav-link">Contact</a>
+                </nav>
+
+                <div class="flex items-center gap-4">
+                    <button class="md:hidden p-2 text-slate-400 hover:text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+
+                    <button onclick="app.router('checkout')" class="relative p-2 rounded-full hover:bg-white/5 transition group">
+                        <svg class="w-6 h-6 text-slate-300 group-hover:text-white transition" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+                        <span id="cart-badge" class="absolute top-0 right-0 h-5 w-5 bg-sky-500 text-white text-xs font-bold rounded-full flex items-center justify-center scale-0 transition-transform duration-200">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-7xl">
+        
+        <div id="view-shop" class="animate-slide-up">
+            
+            <div class="relative rounded-3xl overflow-hidden mb-12 border border-white/10 group">
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-slate-900/60 z-10"></div>
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1600&q=80" class="w-full h-80 md:h-96 object-cover group-hover:scale-105 transition duration-700" alt="Hero">
+                <div class="absolute inset-0 z-20 flex flex-col justify-center px-8 md:px-16">
+                    <div class="inline-flex items-center gap-2 mb-3">
+                        <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
+                        <span class="text-sky-400 font-semibold tracking-wider text-sm uppercase">Island-wide Delivery</span>
+                    </div>
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">Premium Care for <br>Sri Lankan Pets</h2>
+                    <p class="text-slate-300 max-w-lg mb-8 text-lg">Imported nutrition, durable toys, and essential healthcare delivered from Colombo to your doorstep.</p>
+                    <div class="flex gap-4">
+                        <button class="btn-primary" onclick="document.getElementById('product-grid').scrollIntoView({behavior: 'smooth'})">Start Shopping</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 overflow-x-auto pb-6 mb-8 no-scrollbar scroll-smooth">
+                <button class="px-6 py-2 rounded-full bg-white/10 border border-white/10 text-white hover:bg-sky-500 hover:border-sky-500 transition whitespace-nowrap active">All Items</button>
+                <button class="px-6 py-2 rounded-full bg-transparent border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition whitespace-nowrap">Dry Food</button>
+                <button class="px-6 py-2 rounded-full bg-transparent border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition whitespace-nowrap">Toys</button>
+                <button class="px-6 py-2 rounded-full bg-transparent border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition whitespace-nowrap">Vitamins</button>
+                <button class="px-6 py-2 rounded-full bg-transparent border border-white/10 text-slate-400 hover:text-white hover:bg-white/5 transition whitespace-nowrap">Accessories</button>
+            </div>
+
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                </div>
+        </div>
+
+        <div id="view-checkout" class="hidden animate-slide-up">
+            <div class="flex items-center gap-4 mb-8">
+                <button onclick="app.router('shop')" class="p-2 rounded-full hover:bg-white/10 transition text-slate-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                </button>
+                <h2 class="text-2xl font-bold">Checkout</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="glass rounded-2xl p-6 md:p-8">
+                        <h3 class="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-xs">1</span>
+                            Delivery Details
+                        </h3>
+                        
+                        <form id="checkout-form" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">First Name</label>
+                                    <input type="text" class="input-field" placeholder="Kamal" required>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">Last Name</label>
+                                    <input type="text" class="input-field" placeholder="Perera" required>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">Phone Number</label>
+                                    <div class="relative">
+                                        <span class="absolute left-4 top-3 text-slate-500 text-sm">+94</span>
+                                        <input type="tel" class="input-field pl-12" placeholder="77 123 4567" required>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">Email</label>
+                                    <input type="email" class="input-field" placeholder="kamal@example.com" required>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">District</label>
+                                    <select class="input-field appearance-none">
+                                        <option>Colombo</option>
+                                        <option>Gampaha</option>
+                                        <option>Kandy</option>
+                                        <option>Galle</option>
+                                        <option>Matara</option>
+                                        <option>Kurunegala</option>
+                                        <option>Jaffna</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">City</label>
+                                    <input type="text" class="input-field" placeholder="e.g. Nugegoda" required>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1">Street Address</label>
+                                <input type="text" class="input-field" placeholder="No. 123, Galle Road" required>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1">Order Notes (Optional)</label>
+                                <textarea class="input-field min-h-[80px]" placeholder="Landmarks, calling instructions, etc."></textarea>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="glass rounded-2xl p-6 md:p-8 opacity-60 pointer-events-none relative">
+                        <div class="absolute inset-0 flex items-center justify-center z-10">
+                            <span class="bg-black/50 px-3 py-1 rounded-full text-xs font-mono text-slate-300 border border-white/10">Payment Steps Next</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-white mb-4">Payment Method</h3>
+                        <div class="h-12 bg-slate-800/50 rounded-lg w-full flex items-center px-4 gap-4">
+                            <div class="w-8 h-5 bg-slate-600 rounded"></div>
+                            <div class="w-8 h-5 bg-slate-600 rounded"></div>
+                            <span class="text-xs text-slate-500">Cash on Delivery Available</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5">
+                    <div class="glass rounded-2xl p-6 sticky top-24">
+                        <h3 class="text-lg font-semibold text-white mb-6 border-b border-white/10 pb-4">Order Summary</h3>
+                        
+                        <div id="cart-items-wrapper" class="space-y-4 mb-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                            </div>
+
+                        <div class="space-y-3 pt-4 border-t border-white/10 text-sm">
+                            <div class="flex justify-between text-slate-400">
+                                <span>Subtotal</span>
+                                <span id="summary-subtotal">Rs. 0.00</span>
+                            </div>
+                            <div class="flex justify-between text-slate-400">
+                                <span>Delivery (Standard)</span>
+                                <span id="summary-shipping" class="text-sky-400">Rs. 450.00</span>
+                            </div>
+                            <div class="flex justify-between text-white font-bold text-lg pt-4 border-t border-white/10 mt-2">
+                                <span>Total (LKR)</span>
+                                <span id="summary-total">Rs. 450.00</span>
+                            </div>
+                        </div>
+
+                        <button onclick="app.placeOrder()" class="btn-primary w-full mt-8 py-4 text-lg shadow-lg">
+                            Confirm Order
+                        </button>
+                        <p class="text-xs text-center text-slate-500 mt-4">Cash on Delivery & Bank Transfer accepted</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden transition-opacity opacity-0" onclick="app.closeModal()"></div>
+    <div id="product-modal" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl z-50 hidden scale-95 transition-all duration-300">
+        <div class="glass rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[90vh]">
+            <div class="w-full md:w-1/2 bg-white/5 relative h-64 md:h-auto">
+                <img id="modal-img" src="" class="w-full h-full object-cover" alt="Product Detail">
+                <button onclick="app.closeModal()" class="absolute top-4 left-4 bg-black/50 p-2 rounded-full text-white hover:bg-black/70 md:hidden">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="w-full md:w-1/2 p-8 flex flex-col overflow-y-auto">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-sky-400 text-sm font-semibold uppercase tracking-wider">In Stock</span>
+                    <button onclick="app.closeModal()" class="text-slate-400 hover:text-white hidden md:block">
+                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                
+                <h2 id="modal-title" class="text-3xl font-bold mb-2">Product Name</h2>
+                <div class="flex items-center gap-3 mb-6">
+                    <span id="modal-price" class="text-2xl font-bold text-white">Rs. 0.00</span>
+                    <div class="flex text-yellow-500 text-sm">★★★★★ <span class="text-slate-500 ml-1">(4.8)</span></div>
+                </div>
+
+                <p id="modal-desc" class="text-slate-300 leading-relaxed mb-8">Description goes here.</p>
+
+                <div class="mt-auto space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center bg-slate-900 border border-slate-700 rounded-lg">
+                            <button class="px-4 py-3 text-slate-400 hover:text-white" onclick="app.updateModalQty(-1)">-</button>
+                            <span id="modal-qty" class="w-8 text-center font-mono">1</span>
+                            <button class="px-4 py-3 text-slate-400 hover:text-white" onclick="app.updateModalQty(1)">+</button>
+                        </div>
+                        <button id="modal-add-btn" class="flex-1 btn-primary py-3">
+                            Add to Cart
+                        </button>
+                    </div>
+                    
+                    <ul class="text-sm text-slate-500 space-y-2">
+                        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Genuine Imported Products</li>
+                        <li class="flex items-center gap-2"><svg class="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Island-wide Delivery Available</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 border border-sky-500/50 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 translate-y-20 opacity-0 transition-all duration-300 z-[100]">
+        <svg class="w-5 h-5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <span id="toast-msg">Item added to cart</span>
+    </div>
+
+    <script>
+        const app = {
+            data: {
+                // Converted prices to LKR (approximate market rates)
+                products: [
+                    { id: 1, name: "Pedigree Adult Chicken 3kg", price: 3800.00, category: "Dry Food", image: "https://images.unsplash.com/photo-1589924691195-41432c84c161?auto=format&fit=crop&w=600&q=80", desc: "Complete nutrition for adult dogs. Enriched with Omega 6 and Zinc for healthy skin and coat." },
+                    { id: 2, name: "Orthopedic Pet Bed (L)", price: 18500.00, category: "Accessories", image: "https://images.unsplash.com/photo-1541781777631-faaf29752427?auto=format&fit=crop&w=600&q=80", desc: "High-density foam mattress supporting joint health. Perfect for Sri Lankan climate." },
+                    { id: 3, name: "Smart Laser Cat Toy", price: 4200.00, category: "Toys", image: "https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&w=600&q=80", desc: "Automatic laser toy with 3 speed settings to keep your feline entertained." },
+                    { id: 4, name: "Ocean Fish Cat Treats", price: 1250.00, category: "Dry Food", image: "https://images.unsplash.com/photo-1582798358481-d199fb7347bb?auto=format&fit=crop&w=600&q=80", desc: "Crispy treats made with real ocean fish. No artificial colors." },
+                    { id: 5, name: "Tactical Dog Harness", price: 6500.00, category: "Accessories", image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=600&q=80", desc: "Heavy-duty nylon harness with handle for control. Breathable mesh lining." },
+                    { id: 6, name: "Auto-Clean Litter Box", price: 45000.00, category: "Accessories", image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80", desc: "Smart sensor technology automatically cleans waste. Odor control included." },
+                    { id: 7, name: "Heavy Duty Leash", price: 2800.00, category: "Accessories", image: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?auto=format&fit=crop&w=600&q=80", desc: "Reflective stitching for night safety. Comfortable padded handle." },
+                    { id: 8, name: "Pet Vitamin Complex", price: 3200.00, category: "Vitamins", image: "https://images.unsplash.com/photo-1603062369689-d922c26252d6?auto=format&fit=crop&w=600&q=80", desc: "Essential multivitamins for dogs and cats to boost immunity." }
+                ],
+                cart: [],
+                modalQty: 1,
+                currentModalId: null,
+                shippingCost: 450.00 // Standard Colombo delivery rate
+            },
+
+            init() {
+                this.renderGrid();
+                this.updateCartUI();
+            },
+
+            // --- VIEW LOGIC ---
+            router(viewName) {
+                const shop = document.getElementById('view-shop');
+                const checkout = document.getElementById('view-checkout');
+                
+                if (viewName === 'shop') {
+                    shop.classList.remove('hidden');
+                    checkout.classList.add('hidden');
+                    window.scrollTo(0,0);
+                } else {
+                    shop.classList.add('hidden');
+                    checkout.classList.remove('hidden');
+                    this.renderCheckoutList();
+                }
+            },
+
+            // --- RENDER LOGIC ---
+            renderGrid() {
+                const grid = document.getElementById('product-grid');
+                grid.innerHTML = this.data.products.map(p => `
+                    <div class="glass-card rounded-xl p-4 flex flex-col group relative overflow-hidden">
+                        <div class="absolute top-3 left-3 z-10">
+                            <span class="bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wide text-white">${p.category}</span>
+                        </div>
+                        
+                        <div class="relative h-48 rounded-lg overflow-hidden bg-slate-800 mb-4 cursor-pointer" onclick="app.openModal(${p.id})">
+                            <img src="${p.image}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500" alt="${p.name}">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                <span class="bg-white text-black px-4 py-2 rounded-full font-semibold text-sm transform translate-y-4 group-hover:translate-y-0 transition duration-300">Quick View</span>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 flex flex-col">
+                            <h3 class="font-semibold text-lg text-white leading-tight mb-1 truncate">${p.name}</h3>
+                            <div class="flex items-center justify-between mt-auto pt-3">
+                                <span class="text-sky-400 font-bold text-lg">Rs. ${p.price.toLocaleString('en-LK', {minimumFractionDigits: 2})}</span>
+                                <button onclick="app.addToCart(${p.id}, 1)" class="w-8 h-8 rounded-full bg-white/10 hover:bg-sky-500 flex items-center justify-center transition text-white">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            renderCheckoutList() {
+                const container = document.getElementById('cart-items-wrapper');
+                
+                if(this.data.cart.length === 0) {
+                    container.innerHTML = `<div class="text-center py-10 text-slate-500">Your cart is empty. <br><button onclick="app.router('shop')" class="text-sky-400 underline mt-2">Go Shopping</button></div>`;
+                    return;
+                }
+
+                container.innerHTML = this.data.cart.map(item => `
+                    <div class="flex items-center gap-4 bg-slate-800/50 p-3 rounded-xl border border-white/5">
+                        <img src="${item.image}" class="w-16 h-16 rounded-lg object-cover bg-slate-700">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-medium text-white truncate">${item.name}</h4>
+                            <p class="text-sm text-sky-400">Rs. ${item.price.toLocaleString('en-LK')}</p>
+                        </div>
+                        
+                        <div class="flex items-center bg-slate-900 rounded-lg border border-slate-700 h-8">
+                            <button onclick="app.updateCartQty(${item.id}, -1)" class="px-2 text-slate-400 hover:text-white h-full">-</button>
+                            <span class="px-2 text-sm text-white w-6 text-center">${item.qty}</span>
+                            <button onclick="app.updateCartQty(${item.id}, 1)" class="px-2 text-slate-400 hover:text-white h-full">+</button>
+                        </div>
+                        
+                        <button onclick="app.removeFromCart(${item.id})" class="p-2 text-slate-500 hover:text-red-400 transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+                `).join('');
+            },
+
+            // --- CART ACTIONS ---
+            addToCart(id, qty) {
+                const product = this.data.products.find(p => p.id === id);
+                const existing = this.data.cart.find(c => c.id === id);
+
+                if (existing) {
+                    existing.qty += qty;
+                } else {
+                    this.data.cart.push({ ...product, qty: qty });
+                }
+
+                this.updateCartUI();
+                this.showToast(`Added ${qty} x ${product.name}`);
+            },
+
+            removeFromCart(id) {
+                this.data.cart = this.data.cart.filter(c => c.id !== id);
+                this.updateCartUI();
+                this.renderCheckoutList();
+            },
+
+            updateCartQty(id, delta) {
+                const item = this.data.cart.find(c => c.id === id);
+                if (item) {
+                    item.qty += delta;
+                    if (item.qty <= 0) this.removeFromCart(id);
+                    else {
+                        this.updateCartUI();
+                        this.renderCheckoutList();
+                    }
+                }
+            },
+
+            updateCartUI() {
+                const badge = document.getElementById('cart-badge');
+                const totalQty = this.data.cart.reduce((sum, item) => sum + item.qty, 0);
+                
+                // Animate Badge
+                badge.innerText = totalQty;
+                if(totalQty > 0) {
+                    badge.classList.remove('scale-0');
+                    badge.classList.add('scale-100');
+                } else {
+                    badge.classList.add('scale-0');
+                }
+
+                // Calc Totals
+                const subtotal = this.data.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+                const shipping = subtotal > 0 ? this.data.shippingCost : 0;
+                const total = subtotal + shipping;
+
+                // Helper for currency format
+                const fmt = (n) => `Rs. ${n.toLocaleString('en-LK', {minimumFractionDigits: 2})}`;
+
+                document.getElementById('summary-subtotal').innerText = fmt(subtotal);
+                document.getElementById('summary-shipping').innerText = shipping > 0 ? fmt(shipping) : 'Rs. 0.00';
+                document.getElementById('summary-total').innerText = fmt(total);
+            },
+
+            // --- MODAL LOGIC ---
+            openModal(id) {
+                const p = this.data.products.find(x => x.id === id);
+                if(!p) return;
+
+                this.data.currentModalId = id;
+                this.data.modalQty = 1;
+
+                document.getElementById('modal-img').src = p.image;
+                document.getElementById('modal-title').innerText = p.name;
+                document.getElementById('modal-price').innerText = `Rs. ${p.price.toLocaleString('en-LK', {minimumFractionDigits: 2})}`;
+                document.getElementById('modal-desc').innerText = p.desc;
+                document.getElementById('modal-qty').innerText = "1";
+                
+                const btn = document.getElementById('modal-add-btn');
+                btn.onclick = () => {
+                    this.addToCart(this.data.currentModalId, this.data.modalQty);
+                    this.closeModal();
+                };
+
+                const backdrop = document.getElementById('modal-backdrop');
+                const modal = document.getElementById('product-modal');
+                
+                backdrop.classList.remove('hidden');
+                modal.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    modal.classList.remove('scale-95');
+                    modal.classList.add('scale-100');
+                }, 10);
+            },
+
+            closeModal() {
+                const backdrop = document.getElementById('modal-backdrop');
+                const modal = document.getElementById('product-modal');
+                
+                backdrop.classList.add('opacity-0');
+                modal.classList.remove('scale-100');
+                modal.classList.add('scale-95');
+
+                setTimeout(() => {
+                    backdrop.classList.add('hidden');
+                    modal.classList.add('hidden');
+                }, 300);
+            },
+
+            updateModalQty(delta) {
+                this.data.modalQty += delta;
+                if(this.data.modalQty < 1) this.data.modalQty = 1;
+                document.getElementById('modal-qty').innerText = this.data.modalQty;
+            },
+
+            // --- UTILS ---
+            showToast(msg) {
+                const toast = document.getElementById('toast');
+                document.getElementById('toast-msg').innerText = msg;
+                
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                
+                setTimeout(() => {
+                    toast.classList.add('translate-y-20', 'opacity-0');
+                }, 3000);
+            },
+
+            placeOrder() {
+                if(this.data.cart.length === 0) return alert("Your cart is empty!");
+                
+                const form = document.getElementById('checkout-form');
+                if(!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                const btn = document.querySelector('#view-checkout .btn-primary');
+                const originalText = btn.innerText;
+                
+                btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Processing...`;
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    this.data.cart = [];
+                    this.updateCartUI();
+                    this.router('shop');
+                    this.showToast("Order placed successfully!");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    form.reset();
+                }, 2000);
+            }
+        };
+
+        // Initialize App
+        app.init();
+    </script>
+</body>
+</html>

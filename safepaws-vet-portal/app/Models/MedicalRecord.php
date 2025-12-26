@@ -2,35 +2,35 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MedicalRecord extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'patient_id',
-        'user_id',
-        'title',
+        'pet_id',
+        'vet_id',
         'symptoms',
         'diagnosis',
         'prescription',
-        'file_path',
+        'notes',
     ];
 
     protected $casts = [
-        'prescription' => 'array',
+        'prescription' => 'array', // ✅ JSON cast
     ];
 
-    public function patient(): BelongsTo
+    public function pet()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Pet::class);
     }
 
-    public function user(): BelongsTo
+    public function vet()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'vet_id'); // assuming vet is user
+    }
+
+    public function files()
+    {
+        return $this->hasMany(MedicalRecordFile::class);
     }
 }
